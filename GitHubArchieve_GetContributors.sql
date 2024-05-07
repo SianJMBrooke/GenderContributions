@@ -13,7 +13,7 @@ Here's a breakdown of what each part of the code does:
    - It also joins the `github_events` table with the `recent_contributors` CTE based on repository information.
    - Finally, it applies filters to only include rows where the number of contributions by an actor to a repository is greater than 10, and the number of contributors to the repository is greater than 1000.
 
-Therefore, this is code is filtering the GitHub Archieve to generate a summary of unique contributors to repositories meeting specific criteria:
+Therefore, this is code is filtering the GitHub Archieve to generate a summary of unique contributors to python repositories meeting specific criteria:
 
 1. **Contributions Criteria**:
    - Repositories with over 10 contributions made in the most recent year.
@@ -38,6 +38,7 @@ WITH recent_contributions AS (
   WHERE
     github_events.type = 'PushEvent'
     AND TO_DATE (github_events.created_at) >= DATEADD (YEAR, -1, CURRENT_DATE)
+    AND github_events.language ILIKE 'Python'
   GROUP BY
     github_events.actor_display_login,
     github_events.actor_login,
@@ -55,6 +56,7 @@ recent_contributors AS (
   WHERE
     github_events.type = 'PushEvent'
     AND TO_DATE (github_events.created_at) >= DATEADD (YEAR, -3, CURRENT_DATE)
+    AND github_events.language ILIKE 'Python'
   GROUP BY
     github_events.repo_name,
     github_events.repo_id
